@@ -1,7 +1,18 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 4 version
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap");
+
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-family: "Fjalla One", sans-serif;
 }
 
 html,
@@ -33,7 +44,8 @@ body {
   height: 100px;
   background-image: url("images/sky.png");
   background-repeat: repeat-x;
-  animation: movingX 10s linear infinite;
+  -webkit-animation: movingX 10s linear infinite;
+          animation: movingX 10s linear infinite;
 }
 
 .plane {
@@ -45,7 +57,7 @@ body {
   z-index: 99;
 }
 
-.explode{
+.explode {
   display: none;
 }
 
@@ -58,9 +70,17 @@ body {
   height: 16%;
   width: 100%;
 
+  display: -webkit-box;
+
+  display: -ms-flexbox;
+
   display: flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 
   font-size: 40px;
 }
@@ -73,7 +93,8 @@ body {
   height: 100px;
   background-image: url("images/ceiling.png");
   background-repeat: repeat-x;
-  animation: movingX 4.5s linear infinite;
+  -webkit-animation: movingX 4.5s linear infinite;
+          animation: movingX 4.5s linear infinite;
 }
 
 .land {
@@ -85,11 +106,13 @@ body {
   height: 100px;
   background-image: url("images/land.png");
   background-repeat: repeat-x;
-  animation: movingX 4.5s linear infinite;
+  -webkit-animation: movingX 4.5s linear infinite;
+          animation: movingX 4.5s linear infinite;
 }
 
 .stop-animation {
-  animation-play-state: paused;
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
 }
 
 .obstacle {
@@ -97,11 +120,23 @@ body {
   width: 50px;
   height: 300px;
   background-image: url("images/pipe.png");
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .top-obstacle {
-  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+
+@-webkit-keyframes movingX {
+  from {
+    background-position: 0;
+  }
+  to {
+    background-position: -1000px;
+  }
 }
 
 @keyframes movingX {
