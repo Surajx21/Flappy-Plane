@@ -1,0 +1,114 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background-color: #111;
+}
+
+.game-container {
+  width: clamp(220px, 100%, 720px);
+  height: 100%;
+  border: 1px solid black;
+  margin: 0 auto;
+  padding: 100px;
+  background-color: #426dbd;
+  position: relative;
+  overflow: hidden;
+}
+
+.sky {
+  position: absolute;
+  left: 0;
+  bottom: 100px;
+  width: 100%;
+  height: 100px;
+  background-image: url("images/sky.png");
+  background-repeat: repeat-x;
+  animation: movingX 10s linear infinite;
+}
+
+.plane {
+  position: absolute;
+  background-image: url("images/plane.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  z-index: 99;
+}
+
+.explode{
+  display: none;
+}
+
+.score {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  background-color: #426dbd;
+  height: 16%;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 40px;
+}
+.ceiling {
+  position: absolute;
+  top: 10%;
+  left: 0;
+  z-index: 99;
+  width: 100%;
+  height: 100px;
+  background-image: url("images/ceiling.png");
+  background-repeat: repeat-x;
+  animation: movingX 4.5s linear infinite;
+}
+
+.land {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 9;
+  width: 100%;
+  height: 100px;
+  background-image: url("images/land.png");
+  background-repeat: repeat-x;
+  animation: movingX 4.5s linear infinite;
+}
+
+.stop-animation {
+  animation-play-state: paused;
+}
+
+.obstacle {
+  position: absolute;
+  width: 50px;
+  height: 300px;
+  background-image: url("images/pipe.png");
+  object-fit: cover;
+}
+
+.top-obstacle {
+  transform: rotate(180deg);
+}
+
+@keyframes movingX {
+  from {
+    background-position: 0;
+  }
+  to {
+    background-position: -1000px;
+  }
+}
