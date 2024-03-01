@@ -11,9 +11,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const hitSound = new Audio("audios/hit.ogg");
   const jumpSound = new Audio("audios/jump.ogg");
   const scoreSound = new Audio("audios/score.ogg");
+  const bgSound = new Audio("audios/nasheed.ogg");
 
   // Setup
   addListner();
+  bgSound.play();
   plane.style.width = window.innerWidth > 400 ? "150px" : "100px";
 
   // Variables
@@ -80,6 +82,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     gameDisplay.classList.add("animation-stop");
     scoreBoard.classList.add("show")
+
+    bgSound.pause();
 
     let currentScore = score;
     let highScore = localStorage.getItem("highScore");
