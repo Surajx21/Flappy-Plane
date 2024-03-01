@@ -1,149 +1,171 @@
-// Constants
-const plane = document.querySelector(".plane");
-const gameDisplay = document.querySelector(".game-container");
-const ground = document.querySelector(".ground");
-const ceiling = document.querySelector(".ceiling");
-const sky = document.querySelector(".sky");
-const land = document.querySelector(".land");
-const explode = document.querySelector(".explode");
-const scoreCounter = document.querySelector(".score-counter");
+document.addEventListener("DOMContentLoaded", function () {
+  // Constants
+  const gameDisplay = document.querySelector(".game-container");
+  const gameScreen = document.querySelector(".game-screen");
+  const plane = document.querySelector(".plane");
+  const explosion = document.querySelector(".explosion");
+  const scoreCounter = document.querySelector(".score-container span");
+  const scoreBoard = document.querySelector(".score-board");
 
-// Audio Setup
-const hitSound = new Audio("audios/hit.ogg");
-const jumpSound = new Audio("audios/jump.ogg");
-const scoreSound = new Audio("audios/score.ogg");
+  // Audio Setup
+  const hitSound = new Audio("audios/hit.ogg");
+  const jumpSound = new Audio("audios/jump.ogg");
+  const scoreSound = new Audio("audios/score.ogg");
 
-// Setup
-addListner();
+  // Setup
+  addListner();
+  plane.style.width = window.innerWidth > 400 ? "150px" : "100px";
 
-plane.style.width = window.width > 400 ? "150px" : "100px";
-plane.style.height = window.width > 400 ? "40px" : "30px";
+  // Variables
+  let planeBottom = 400;
 
-// Variables
-let planeLeft = gameDisplay.clientWidth / 8;
-let planeBottom = 400;
+  let isGameOver = false;
+  let gravity = 4;
+  let angle = 0;
+  let gap = window.innerWidth > 350 ? 180 : 100;
 
-let isGameOver = false;
-let gravity = 3;
-let gap = 420;
-let angle = 0;
+  let score = 0;
+  let gameTimerId = setInterval(startGame, 20);
 
-let score = 0;
-let gameTimerId = setInterval(startGame, 20);
-let scoreInterval = setInterval(updateScore, 2600);
-
-// Functions
-function jump() {
-  if (planeBottom < 520) planeBottom += 50;
-
-  jumpSound.play();
-  plane.style.bottom = planeBottom + "px";
-}
-
-function control(e) {
-  if (e.keyCode === 32 || e.keyCode === 38) {
-    jump();
+  // Functions
+  function getRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
-}
 
-function startGame() {
-  if (planeBottom < 90) {
-    clearInterval(gameTimerId);
+  function jump() {
+    if (planeBottom < 480) planeBottom += 60;
+
+    jumpSound.play();
+
+    angle = -getRandomNumber(20, 30);
+
+    plane.style.transform = `rotate(${angle}deg)`;
+    plane.style.bottom = planeBottom + "px";
   }
-  planeBottom -= gravity;
 
-  plane.style.bottom = planeBottom + "px";
-  plane.style.left = planeLeft + "px";
-}
+  function control(e) {
+    if (e.keyCode === 32 || e.keyCode === 38) {
+      jump();
+    }
+  }
 
-function updateScore() {
-  if (isGameOver) return;
-  score += 1;
-  scoreSound.play();
-  scoreCounter.innerHTML = score;
-}
+  function startGame() {
+    if (planeBottom < 20) {
+      clearInterval(gameTimerId);
+    }
 
-function gameOver(left, top) {
-  hitSound.play();
+    angle = angle > 50 ? 50 : angle + getRandomNumber(2, 4);
+    planeBottom -= gravity;
 
-  explode.style.display = "block";
-  explode.style.position = "fixed";
-  explode.style.left = left + "px";
-  explode.style.top = top + "px";
+    plane.style.transform = `rotate(${angle}deg)`;
+    plane.style.bottom = planeBottom + "px";
+  }
 
-  clearInterval(scoreInterval);
-
-  isGameOver = true;
-
-  ceiling.classList.add("stop-animation");
-  land.classList.add("stop-animation");
-  sky.classList.add("stop-animation");
-
-  removeListner();
-}
-
-function generateObstacle() {
-  let obstacle = document.createElement("div");
-  let topObstacle = document.createElement("div");
-
-  let randomHeight = Math.random() * 90;
-  let obstacleLeft = gameDisplay.clientWidth;
-  let obstacleBottom = randomHeight;
-
-  obstacle.classList.add("obstacle");
-  topObstacle.classList.add("topObstacle", "obstacle");
-
-  obstacle.style.left = obstacleLeft + "px";
-  topObstacle.style.left = obstacleLeft + "px";
-
-  obstacle.style.bottom = obstacleBottom + "px";
-  topObstacle.style.bottom = obstacleBottom + gap + "px";
-
-  gameDisplay.appendChild(obstacle);
-  gameDisplay.appendChild(topObstacle);
-
-  function moveObstacle() {
+  function updateScore() {
     if (isGameOver) return;
-    obstacleLeft -= 4;
+    score += 1;
+    scoreSound.play();
+    scoreCounter.innerHTML = score;
+  }
+
+  function setHighScore(score) {
+    localStorage.setItem("highScore", score);
+  }
+
+
+  function gameOver(left, top) {
+    explosion.style.left = left + "px";
+    explosion.style.top = top + "px";
+    explosion.style.display = "block";
+
+    gameDisplay.classList.add("animation-stop");
+    scoreBoard.classList.add("show")
+
+    let currentScore = score;
+    let highScore = localStorage.getItem("highScore");
+
+    if (highScore === null || currentScore > highScore) {
+      setHighScore(currentScore);
+      highScore = currentScore;
+    }
+
+    let [curSpan, highSpan] = scoreBoard.querySelectorAll("span");
+    curSpan.innerHTML = currentScore;
+    highSpan.innerHTML = highScore;
+
+    isGameOver = true;
+    removeListner();
+  }
+
+  function generateObstacle() {
+    let obstacle = document.createElement("div");
+    let topObstacle = document.createElement("div");
+
+    let randomHeight = getRandomNumber(40, 230);
+    let obstacleLeft = gameScreen.clientWidth;
+
+    obstacle.classList.add("bottom", "obstacle");
+    topObstacle.classList.add("top", "obstacle");
+
     obstacle.style.left = obstacleLeft + "px";
     topObstacle.style.left = obstacleLeft + "px";
 
-    if (obstacleLeft < -70) {
-      clearInterval(obstacleTimerId);
-      gameDisplay.removeChild(obstacle);
-      gameDisplay.removeChild(topObstacle);
-    }
+    obstacle.style.height = randomHeight + "px";
+    topObstacle.style.height =
+      gameScreen.clientHeight - randomHeight - gap + "px";
 
-    let obstacles = document.querySelectorAll(".obstacle");
+    gameScreen.appendChild(obstacle);
+    gameScreen.appendChild(topObstacle);
 
-    obstacles.forEach((elem) => {
-      let planeProps = plane.getBoundingClientRect();
-      let elemProps = elem.getBoundingClientRect();
+    function moveObstacle() {
+      if (isGameOver) return;
+      obstacleLeft -= 4;
+      obstacle.style.left = obstacleLeft + "px";
+      topObstacle.style.left = obstacleLeft + "px";
 
-      if (
-        (planeProps.left < elemProps.left + elemProps.width &&
+      if (obstacleLeft < -10) {
+        clearInterval(obstacleTimerId);
+        gameScreen.removeChild(obstacle);
+        gameScreen.removeChild(topObstacle);
+        updateScore();
+      }
+
+      let obstacles = document.querySelectorAll(".obstacle");
+
+      obstacles.forEach((elem) => {
+        let planeProps = plane.getBoundingClientRect();
+        let elemProps = elem.getBoundingClientRect();
+
+        if (
+          planeProps.left < elemProps.left + elemProps.width &&
           planeProps.left + planeProps.width > elemProps.left &&
           planeProps.top < elemProps.top + elemProps.height &&
-          planeProps.top + planeProps.height > elemProps.top) ||
-        planeBottom < 90
-      ) {
-        clearInterval(obstacleTimerId);
-        gameOver(planeProps.left, planeProps.top);
-      }
-    });
+          planeProps.top + planeProps.height > elemProps.top
+        ) {
+          clearInterval(obstacleTimerId);
+          hitSound.play();
+          gameOver(elemProps.left - 50, planeProps.top - 30);
+        }
+        if (planeBottom < 13) {
+          clearInterval(obstacleTimerId);
+          hitSound.play();
+          gameOver(planeProps.left, planeProps.top + 30);
+        }
+      });
+    }
+    let obstacleTimerId = setInterval(moveObstacle, 20);
+    if (!isGameOver) setTimeout(generateObstacle, 2500);
   }
-  let obstacleTimerId = setInterval(moveObstacle, 20);
-  if (!isGameOver) setTimeout(generateObstacle, 2500);
-}
-generateObstacle();
+  generateObstacle();
 
-// Event Listeners
-function addListner() {
-  document.addEventListener("keydown", control);
-  document.addEventListener("mousedown", jump);
-}
+  // Event Listeners
+  function addListner() {
+    document.addEventListener("keydown", control);
+    document.addEventListener("mousedown", jump);
+  }
 
-function removeListner() {
-  document.removeEventListener("keydown", control);
-  document.removeEventListener("mousedown", jump);
-}
+  function removeListner() {
+    document.removeEventListener("keydown", control);
+    document.removeEventListener("mousedown", jump);
+  }
+});

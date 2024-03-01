@@ -8,15 +8,26 @@
   </head>
   <body>
     <div class="game-container">
-      <div class="score">
-        Score: &nbsp; <span class="score-counter"> 0</span>
+      <div class="score-container">Score: &nbsp; <span>0</span></div>
+
+      <div class="cieling"></div>
+
+      <div class="game-screen">
+        <div class="plane">
+          <img src="images/plane.png" alt="Plane Image" />
+        </div>
+
+        <div class="explosion">
+          <img src="images/explosion.png" width="200" alt="" />
+        </div>
+        <div class="buildings"></div>
       </div>
-      <div class="ceiling movingX"></div>
-      <div class="sky skyAnime"></div>
-      <div class="land movingX"></div>
-      <div class="plane">
-        <img src="images/explosion.png" alt="explosion img" class="explode">
+      <div class="score-board">
+        <div>Your Score: <span>0</span></div>
+        <div>High Score: <span>0</span></div>
+        <button onclick="window.location.reload();">Restart</button>
       </div>
+      <div class="land"></div>
     </div>
 
     <script src="script.js"></script>

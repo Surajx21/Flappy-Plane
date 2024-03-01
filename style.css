@@ -28,122 +28,186 @@ body {
 .game-container {
   width: clamp(220px, 100%, 720px);
   height: 100%;
-  border: 1px solid black;
   margin: 0 auto;
-  padding: 100px;
   background-color: #426dbd;
   position: relative;
   overflow: hidden;
-}
-
-.sky {
-  position: absolute;
-  left: 0;
-  bottom: 100px;
-  width: 100%;
-  height: 100px;
-  background-image: url("images/sky.png");
-  background-repeat: repeat-x;
-  -webkit-animation: movingX 10s linear infinite;
-          animation: movingX 10s linear infinite;
-}
-
-.plane {
-  position: absolute;
-  background-image: url("images/plane.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  z-index: 99;
-}
-
-.explode {
-  display: none;
-}
-
-.score {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 99;
-  background-color: #426dbd;
-  height: 16%;
-  width: 100%;
 
   display: -webkit-box;
 
   display: -ms-flexbox;
 
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-
-  font-size: 40px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
-.ceiling {
-  position: absolute;
-  top: 10%;
-  left: 0;
-  z-index: 99;
+
+.score-container {
+  font-size: 35px;
+  margin-bottom: 20px;
+}
+
+.cieling {
   width: 100%;
-  height: 100px;
-  background-image: url("images/ceiling.png");
-  background-repeat: repeat-x;
-  -webkit-animation: movingX 4.5s linear infinite;
-          animation: movingX 4.5s linear infinite;
+  height: 16px;
+  background: url("images/ceiling.png") repeat-x;
+  -webkit-animation: movingScreen 3.5s linear infinite;
+          animation: movingScreen 3.5s linear infinite;
 }
 
 .land {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  z-index: 9;
   width: 100%;
   height: 100px;
-  background-image: url("images/land.png");
-  background-repeat: repeat-x;
-  -webkit-animation: movingX 4.5s linear infinite;
-          animation: movingX 4.5s linear infinite;
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  background: url("images/land.png") repeat-x;
+  -webkit-animation: movingScreen 3.5s linear infinite;
+          animation: movingScreen 3.5s linear infinite;
 }
 
-.stop-animation {
-  -webkit-animation-play-state: paused;
-          animation-play-state: paused;
+.game-screen {
+  width: 100%;
+  height: 70vh;
+  position: relative;
+}
+
+.plane {
+  position: absolute;
+  pointer-events: none;
+  z-index: 99;
+  left: 8%;
+  -webkit-transition: all 0.1s ease;
+  -o-transition: all 0.1s ease;
+  transition: all 0.1s ease;
+  -webkit-transform-origin: center;
+      -ms-transform-origin: center;
+          transform-origin: center;
+}
+
+.plane img {
+  width: 100%;
+  height: 100%;
+}
+
+.explosion {
+  position: fixed;
+  z-index: 9;
+  display: none;
 }
 
 .obstacle {
   position: absolute;
-  width: 50px;
-  height: 300px;
-  background-image: url("images/pipe.png");
-  -o-object-fit: cover;
-     object-fit: cover;
+  width: 60px;
+  background: url("images/pipe.png") repeat-y;
 }
 
-.top-obstacle {
-  -webkit-transform: rotate(180deg);
-      -ms-transform: rotate(180deg);
-          transform: rotate(180deg);
+.obstacle.bottom {
+  bottom: 0;
 }
 
-@-webkit-keyframes movingX {
-  from {
-    background-position: 0;
+.obstacle.top {
+  top: 0;
+}
+
+.buildings {
+  position: absolute;
+  width: 100%;
+  height: 120px;
+
+  bottom: 3%;
+  left: 0;
+
+  background: url("images/buildings.png") repeat-x;
+  -webkit-animation: movingScreen 11s linear infinite;
+          animation: movingScreen 11s linear infinite;
+}
+
+.score-board {
+  position: absolute;
+  width: clamp(250px, 80%, 350px);
+  height: 200px;
+  z-index: 99;
+  border-radius: 10px;
+
+  display: -webkit-box;
+
+  display: -ms-flexbox;
+
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+
+  -webkit-transform: scale(0);
+
+      -ms-transform: scale(0);
+
+          transform: scale(0);
+  gap: 20px;
+
+  color: #fff;
+  font-size: 20px;
+  -webkit-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  background-color: #171616b8;
+}
+
+.score-board.show {
+  -webkit-transform: scale(1);
+      -ms-transform: scale(1);
+          transform: scale(1);
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 20px;
+  background-color: #f11d13;
+  border: none;
+  border-radius: 10px;
+}
+
+.animation-stop .buildings,
+.animation-stop .land,
+.animation-stop .cieling {
+  -webkit-animation-play-state: paused;
+          animation-play-state: paused;
+}
+
+/* Keyframes */
+
+@-webkit-keyframes movingScreen {
+  0% {
+    background-position: 0px;
   }
-  to {
+  100% {
     background-position: -1000px;
   }
 }
 
-@keyframes movingX {
-  from {
-    background-position: 0;
+@keyframes movingScreen {
+  0% {
+    background-position: 0px;
   }
-  to {
+  100% {
     background-position: -1000px;
   }
 }
